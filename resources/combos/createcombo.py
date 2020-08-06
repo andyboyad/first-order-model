@@ -13,6 +13,7 @@ column = int(sys.argv[5])
 
 print(os.listdir(gen_folder))
 gens = os.listdir(gen_folder)
+print(f"new order: {gens}")
 random.shuffle(gens)
 
 if row*column < len(gens):
