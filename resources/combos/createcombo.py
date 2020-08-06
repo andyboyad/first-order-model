@@ -2,6 +2,7 @@ from moviepy.editor import *
 import moviepy.video.fx.all as vfx
 import sys
 import os
+import random
 
 template = sys.argv[1]
 template_vid = os.path.join(template, sys.argv[2])
@@ -12,6 +13,7 @@ column = int(sys.argv[5])
 
 print(os.listdir(gen_folder))
 gens = os.listdir(gen_folder)
+random.shuffle(gens)
 
 if row*column < len(gens):
     print(f"Error: there are {len(gens)} videos but dimensions are {row}*{column}")
