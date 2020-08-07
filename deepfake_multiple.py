@@ -13,8 +13,8 @@ from demo import make_animation
 from skimage import img_as_ubyte
 warnings.filterwarnings("ignore")
 
-if len(sys.argv) != 6:
-    print("Usage: deepfake_multiple.py <source name> <template name> <final_vid_name> <rows> <columns>")
+if len(sys.argv) < 6:
+    print("Usage: deepfake_multiple.py <source name> <template name> <final_vid_name> <rows> <columns> <shuffle?>")
     sys.exit()
 
 source_folder = os.path.join(os.curdir, "resources", "combos", sys.argv[1])
@@ -26,6 +26,10 @@ final_vid = os.path.join(os.curdir, "resources", "combos", sys.argv[1], sys.argv
 final_vid_name = sys.argv[3]
 x = int(sys.argv[4])
 y = int(sys.argv[5])
+shuffle = ""
+if len(sys.argv) > 6:
+    print("SHOULD NOT CREATE SHUFFLE")
+    shuffle="noshuffle"
 
 list_images = os.listdir(image_folder)
 driving_video = imageio.mimread(template_video)
@@ -44,7 +48,7 @@ for image in list_images:
         imageio.mimsave(gen_vid, [img_as_ubyte(frame) for frame in predictions])
 
 combiner = os.path.join(os.curdir, "resources", "combos", "createcombo.py")
-os.system(f"python3 {combiner} {source_folder} {template_video_name} {final_vid_name} {x} {y}")
+os.system(f"python3 {combiner} {source_folder} {template_video_name} {final_vid_name} {x} {y} {shuffle}")
 sys.exit()
 
 

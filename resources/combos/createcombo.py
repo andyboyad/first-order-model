@@ -11,10 +11,17 @@ final_vid = os.path.join(template, sys.argv[3])
 row = int(sys.argv[4])
 column = int(sys.argv[5])
 
+shuffle = True
+print(sys.argv)
+if len(sys.argv) > 6:
+    print("NOT CREATING SHUFFLE")
+    shuffle = False
+
 print(os.listdir(gen_folder))
 gens = os.listdir(gen_folder)
 print(f"new order: {gens}")
-random.shuffle(gens)
+if shuffle:
+    random.shuffle(gens)
 
 if row*column < len(gens):
     print(f"Error: there are {len(gens)} videos but dimensions are {row}*{column}")
