@@ -19,9 +19,9 @@ if len(sys.argv) > 6:
 
 print(os.listdir(gen_folder))
 gens = os.listdir(gen_folder)
-print(f"new order: {gens}")
 if shuffle:
     random.shuffle(gens)
+    print(f"new order: {gens}")
 
 if row*column < len(gens):
     print(f"Error: there are {len(gens)} videos but dimensions are {row}*{column}")
