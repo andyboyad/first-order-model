@@ -14,7 +14,7 @@ from skimage import img_as_ubyte
 warnings.filterwarnings("ignore")
 
 if len(sys.argv) < 6:
-    print("Usage: deepfake_multiple.py <source name> <template name> <final_vid_name> <rows> <columns> <shuffle?>")
+    print("Usage: deepfake_multiple.py <source name> <template name> <final_vid_name> <rows> <columns> <no shuffle arg>")
     sys.exit()
 
 source_folder = os.path.join(os.curdir, "resources", "combos", sys.argv[1])

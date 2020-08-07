@@ -44,6 +44,7 @@ for vid in gens:
         vids_row = []
 if len(vids_row) != 0:
     vids.append(vids_row)
+print(vids)
 final_clip = clips_array(vids)
 final_clip.write_videofile(final_vid, fps=30)
 
