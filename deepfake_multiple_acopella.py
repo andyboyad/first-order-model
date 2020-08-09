@@ -46,8 +46,8 @@ for template_video in list_templates:
     if not os.path.exists(gen_vid):
         driving_video = imageio.mimread(template_video_path)
         driving_video = [resize(frame, (256, 256))[..., :3] for frame in driving_video]
-        generator, kp_detector = load_checkpoints(config_path='config/vox-256.yaml', 
-                            checkpoint_path='vox-cpk.pth.tar')
+        generator, kp_detector = load_checkpoints(config_path='config/vox-adv-256.yaml', 
+                            checkpoint_path='vox-adv-cpk.pth.tar')
         predictions = make_animation(source_image, driving_video, generator, kp_detector, relative=True)
         imageio.mimsave(gen_vid, [img_as_ubyte(frame) for frame in predictions])
 
