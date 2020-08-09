@@ -21,13 +21,24 @@ final_vid = os.path.join(os.curdir, "resources", "final_videos", sys.argv[4])
 createvid = os.path.join(os.curdir, "resources", "createvid.py")
 
 source_image = imageio.imread(first_img)
-driving_video = imageio.mimread(template_video)
+driving_video_source = imageio.get_reader(template_video)
+print("READ")
 
 
 #Resize image and video to 256x256
 
 source_image = resize(source_image, (256, 256))[..., :3]
-driving_video = [resize(frame, (256, 256))[..., :3] for frame in driving_video]
+driving_video = []
+print("NOT PROCESSING YET")
+while True:
+    try:
+        d = driving_video_source.get_next_data()
+    except Exception:
+            break
+    else:
+        driving_video.append(resize(d, (256, 256))[..., :3])
+#driving_video = [resize(frame, (256, 256))[..., :3] for frame in driving_video]
+print("PROCESSED DRIVING VIDEO")
 
 def display(source, driving, generated=None):
     fig = plt.figure(figsize=(8 + 4 * (generated is not None), 6))
