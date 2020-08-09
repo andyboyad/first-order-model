@@ -5,7 +5,8 @@ import os
 import random
 
 template = sys.argv[1]
-template_vid = os.path.join(template, sys.argv[2])
+template_vid = os.path.join(template, "templates", sys.argv[2])
+#template_vid = os.path.join(template, sys.argv[2])
 gen_folder = os.path.join(template, "gen")
 final_vid = os.path.join(template, sys.argv[3])
 row = int(sys.argv[4])
