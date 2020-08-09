@@ -47,10 +47,9 @@ def display(source, driving, generated=None):
     return ani
 
 from demo import load_checkpoints
-#generator, kp_detector = load_checkpoints(config_path='config/vox-adv-256.yaml', 
-#                            checkpoint_path='vox-adv-cpk.pth.tar')
-generator, kp_detector = load_checkpoints(config_path='config/vox-256.yaml', 
-                            checkpoint_path='vox-cpk.pth.tar')            
+generator, kp_detector = load_checkpoints(config_path='config/taichi-256.yaml', 
+                            checkpoint_path='taichi-cpk.pth.tar')
+            
 
 
 from demo import make_animation
