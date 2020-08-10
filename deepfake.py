@@ -39,7 +39,7 @@ while True:
         driving_video.append(resize(d, (256, 256))[..., :3])
 #driving_video = [resize(frame, (256, 256))[..., :3] for frame in driving_video]
 print("PROCESSED DRIVING VIDEO")
-
+print(len(driving_video))
 def display(source, driving, generated=None):
     fig = plt.figure(figsize=(8 + 4 * (generated is not None), 6))
 

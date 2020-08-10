@@ -13,28 +13,22 @@ from demo import make_animation
 from skimage import img_as_ubyte
 warnings.filterwarnings("ignore")
 
-if len(sys.argv) < 6:
-    print("Usage: deepfake_multiple.py <source name> <template name> <final_vid_name> <rows> <columns> <no shuffle arg>")
+if len(sys.argv) < 5:
+    print("Usage: deepfake_multiple.py <source name> <template name> <final_vid_name> <interval>")
     sys.exit()
 
-source_folder = os.path.join(os.curdir, "resources", "combos", sys.argv[1])
-image_folder = os.path.join(os.curdir, "resources", "combos", sys.argv[1], "images")
-template_video = os.path.join(os.curdir, "resources", "combos", sys.argv[1], sys.argv[2])
+source_folder = os.path.join(os.curdir, "resources", "chained", sys.argv[1])
+image_folder = os.path.join(os.curdir, "resources", "chained", sys.argv[1], "images")
+template_video = os.path.join(os.curdir, "resources", "chained", sys.argv[1], sys.argv[2])
 template_video_name = sys.argv[2]
-gen_vid_folder = os.path.join(os.curdir, "resources", "combos", sys.argv[1], "gen")
-final_vid = os.path.join(os.curdir, "resources", "combos", sys.argv[1], sys.argv[3])
+gen_vid_folder = os.path.join(os.curdir, "resources", "chained", sys.argv[1], "gen")
+final_vid = os.path.join(os.curdir, "resources", "chained", sys.argv[1], sys.argv[3])
 final_vid_name = sys.argv[3]
-x = int(sys.argv[4])
-y = int(sys.argv[5])
-shuffle = ""
-if len(sys.argv) > 6:
-    print("SHOULD NOT CREATE SHUFFLE")
-    shuffle="noshuffle"
+interval = int(30*float(sys.argv[4]))
 
 list_images = os.listdir(image_folder)
-#driving_video = imageio.mimread(template_video)
-#driving_video = [resize(frame, (256, 256))[..., :3] for frame in driving_video]
-driving_video = imageio.get_reader(template_video)
+print(template_video)
+driving_video_source = imageio.get_reader(template_video)
 driving_video = []
 while True:
     try:
@@ -45,19 +39,31 @@ while True:
         driving_video.append(resize(d, (256, 256))[..., :3])
 generator, kp_detector = load_checkpoints(config_path='config/vox-256.yaml', 
                             checkpoint_path='vox-cpk.pth.tar')
-for image in list_images:
+list_images = list_images*10
+print("LOADED VIDEO")
+images_pointer = 0
+print(interval)
+print(len(driving_video))
+for m in range(0, len(driving_video), interval):
+    inter = m
+    image = list_images[images_pointer]
+    images_pointer+=1
+    if images_pointer >= len(list_images):
+        images_pointer=0
+    cut_video = driving_video[inter:inter+interval]
     image_path = os.path.join(image_folder, image)
     source_image = imageio.imread(image_path)
     source_image = resize(source_image, (256, 256))[..., :3]
     gen_vid_name = image.split(".")[0]
-    gen_vid_name = f"{gen_vid_name}_gen.mp4"
+    gen_vid_name = f"{inter}_gen.mp4"
     gen_vid = os.path.join(gen_vid_folder, gen_vid_name)
     if not os.path.exists(gen_vid):
-        predictions = make_animation(source_image, driving_video, generator, kp_detector, relative=True)
+        predictions = make_animation(source_image, cut_video, generator, kp_detector, relative=True)
         imageio.mimsave(gen_vid, [img_as_ubyte(frame) for frame in predictions])
 
-combiner = os.path.join(os.curdir, "resources", "combos", "createcombo.py")
-os.system(f"python3 {combiner} {source_folder} {template_video_name} {final_vid_name} {x} {y} {shuffle}")
+print("???")
+combiner = os.path.join(os.curdir, "resources", "chained", "createchained.py")
+os.system(f"python3 {combiner} {source_folder} {template_video_name} {final_vid_name}")
 sys.exit()
 
 
