@@ -6,7 +6,8 @@ from skimage.transform import resize
 from IPython.display import HTML
 import warnings
 import sys
-import os
+import os 
+import random
 
 from demo import load_checkpoints
 from demo import make_animation
@@ -27,6 +28,7 @@ final_vid_name = sys.argv[3]
 interval = int(30*float(sys.argv[4]))
 
 list_images = os.listdir(image_folder)
+#random.shuffle(list_images)
 print(template_video)
 driving_video_source = imageio.get_reader(template_video)
 driving_video = []
@@ -39,9 +41,9 @@ while True:
         driving_video.append(resize(d, (256, 256))[..., :3])
 generator, kp_detector = load_checkpoints(config_path='config/vox-256.yaml', 
                             checkpoint_path='vox-cpk.pth.tar')
-list_images = list_images*10
 print("LOADED VIDEO")
 images_pointer = 0
+counter=0
 print(interval)
 print(len(driving_video))
 for m in range(0, len(driving_video), interval):
@@ -50,7 +52,6 @@ for m in range(0, len(driving_video), interval):
     images_pointer+=1
     if images_pointer >= len(list_images):
         images_pointer=0
-    cut_video = driving_video[inter:inter+interval]
     image_path = os.path.join(image_folder, image)
     source_image = imageio.imread(image_path)
     source_image = resize(source_image, (256, 256))[..., :3]
@@ -58,8 +59,8 @@ for m in range(0, len(driving_video), interval):
     gen_vid_name = f"{inter}_gen.mp4"
     gen_vid = os.path.join(gen_vid_folder, gen_vid_name)
     if not os.path.exists(gen_vid):
-        predictions = make_animation(source_image, cut_video, generator, kp_detector, relative=True)
-        imageio.mimsave(gen_vid, [img_as_ubyte(frame) for frame in predictions])
+        predictions = make_animation(source_image, driving_video, generator, kp_detector, relative=True)
+        imageio.mimsave(gen_vid, [img_as_ubyte(frame) for frame in predictions[inter:inter+interval]])
 
 print("???")
 combiner = os.path.join(os.curdir, "resources", "chained", "createchained.py")

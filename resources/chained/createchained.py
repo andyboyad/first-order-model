@@ -11,7 +11,8 @@ final_vid = os.path.join(template, sys.argv[3])
 
 
 
-gens = os.listdir(gen_folder)
+gens = sorted(os.listdir(gen_folder), key= lambda x: int(x.split("_")[0]))
+print(gens)
 first = True
 vids = []
 for vid in gens:
